@@ -38,6 +38,7 @@ async def handle_policy_response(update: Update, context: ContextTypes.DEFAULT_T
             [InlineKeyboardButton("📘 DSD & DE", url="https://t.me/+tabUbigyyQxiZGY1")],
             [InlineKeyboardButton("👨‍💻 CHAT GROUP", url="https://t.me/Btech_course")],
             [InlineKeyboardButton("🎬 MOVIE", url="https://t.me/techmovie2025")]
+            [InlineKeyboardButton("📗 NOTES", url="https://t.me/+yxayMFNw16IzOWI9")]
         ]
         reply_markup = InlineKeyboardMarkup(keyboard)
         await query.edit_message_text(
