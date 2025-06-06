@@ -2,6 +2,6 @@ services:
   - type: web
     name: btech-telegram-bot
     env: python
-    buildCommand: ""
-    startCommand: python main.py
+    buildCommand: "requirement -r requirment.txt"
+    startCommand: python telebot.py
     plan: free
