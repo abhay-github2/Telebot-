@@ -27,6 +27,7 @@ async def handle_policy_response(update: Update, context: ContextTypes.DEFAULT_T
         welcome_text = f"Hello {user_first_name}!"
         keyboard = [
             [InlineKeyboardButton("📘 MATHEMATICS-4", url="https://t.me/+-x-5jIjLbSsyMjc1")],
+            [InlineKeyboardButton("📒🔖 ONE SHORT LECTURE", url="https://t.me/+0gwqmIQXTbQxNWM1")],
             [InlineKeyboardButton("📗 PYTHON", url="https://t.me/+fqycovjNK-U3OTM1")],
             [InlineKeyboardButton("📕 DATA STRUCTURE", url="https://t.me/+OgloXv7bzsQ3MTBl")],
             [InlineKeyboardButton("📔 CO & CA", url="https://t.me/+Qhw7v4kWSvwwOTE1")],
@@ -37,7 +38,7 @@ async def handle_policy_response(update: Update, context: ContextTypes.DEFAULT_T
             [InlineKeyboardButton("📙 BSS", url="https://t.me/+_zXVLEjdE0FhN2Nl")],
             [InlineKeyboardButton("📘 DSD & DE", url="https://t.me/+tabUbigyyQxiZGY1")],
             [InlineKeyboardButton("👨‍💻 CHAT GROUP", url="https://t.me/Btech_course")],
-            [InlineKeyboardButton("🎬 MOVIE", url="https://t.me/techmovie2025")]
+            [InlineKeyboardButton("🎬 MOVIE", url="https://t.me/techmovie2025")],
             [InlineKeyboardButton("📗 NOTES", url="https://t.me/+yxayMFNw16IzOWI9")]
         ]
         reply_markup = InlineKeyboardMarkup(keyboard)
