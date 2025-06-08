@@ -1,5 +1,12 @@
-from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup
-from telegram.ext import ApplicationBuilder, CommandHandler, CallbackQueryHandler, ContextTypes
+from flask import Flask, request
+from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup, Bot
+from telegram.ext import Dispatcher, CommandHandler, CallbackQueryHandler, ContextTypes
+import os
+
+TOKEN = "7992343355:AAF81Y88btBBv4fFLyj_ILauuaSeQA4p1Co"
+bot = Bot(token=TOKEN)
+app = Flask(__name__)
+dispatcher = Dispatcher(bot=bot, update_queue=None, use_context=True)
 
 # /start command
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
@@ -20,7 +27,6 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
 async def handle_policy_response(update: Update, context: ContextTypes.DEFAULT_TYPE):
     query = update.callback_query
     await query.answer()
-
     if query.data == "accept_policy":
         context.user_data["accepted_policy"] = True 
         user_first_name = update.effective_user.first_name
@@ -49,7 +55,7 @@ async def handle_policy_response(update: Update, context: ContextTypes.DEFAULT_T
     else:
         await query.edit_message_text("You must accept the Privacy Policy to use this bot.")
 
-# /help command
+# Other commands
 async def help_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await update.message.reply_text(
         "/notes - Get subject notes\n"
@@ -59,7 +65,6 @@ async def help_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
         "/privacy - Privacy & Data Policy"
     )
 
-# /notes command
 async def notes(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await update.message.reply_text(
         "Choose a subject:\n"
@@ -67,17 +72,14 @@ async def notes(update: Update, context: ContextTypes.DEFAULT_TYPE):
         "📗 Physics Notes: https://example.com/physics_notes"
     )
 
-# /video command
 async def video(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await update.message.reply_text(
         "Watch this lecture on AI Basics:\nhttps://youtube.com/example"
     )
 
-# /contact command
 async def contact(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await update.message.reply_text("Email: support@edubot.in\nTelegram: @yourusername")
 
-# /privacy command
 async def privacy(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await update.message.reply_text(
         "BTECHAIMLBOT Privacy Policy:\n\n"
@@ -85,17 +87,26 @@ async def privacy(update: Update, context: ContextTypes.DEFAULT_TYPE):
         "By using this bot, you agree to our Privacy Terms in compliance with GDPR & IT Act 2000."
     )
 
-# Build the bot app
-app = ApplicationBuilder().token("7992343355:AAF81Y88btBBv4fFLyj_ILauuaSeQA4p1Co").build()
-
 # Register Handlers
-app.add_handler(CommandHandler("start", start))
-app.add_handler(CallbackQueryHandler(handle_policy_response))
-app.add_handler(CommandHandler("help", help_command))
-app.add_handler(CommandHandler("notes", notes))
-app.add_handler(CommandHandler("video", video))
-app.add_handler(CommandHandler("contact", contact))
-app.add_handler(CommandHandler("privacy", privacy))
+dispatcher.add_handler(CommandHandler("start", start))
+dispatcher.add_handler(CallbackQueryHandler(handle_policy_response))
+dispatcher.add_handler(CommandHandler("help", help_command))
+dispatcher.add_handler(CommandHandler("notes", notes))
+dispatcher.add_handler(CommandHandler("video", video))
+dispatcher.add_handler(CommandHandler("contact", contact))
+dispatcher.add_handler(CommandHandler("privacy", privacy))
 
-# Run the bot
-app.run_polling()
+# Flask Webhook Routes
+@app.route(f"/{TOKEN}", methods=["POST"])
+def webhook():
+    update = Update.de_json(request.get_json(force=True), bot)
+    dispatcher.process_update(update)
+    return "ok"
+
+@app.route("/", methods=["GET"])
+def home():
+    return "Bot is running with Flask!"
+
+# For local run (optional)
+if __name__ == "__main__":
+    app.run(port=int(os.environ.get("PORT", 10000)))
