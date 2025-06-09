@@ -3,5 +3,5 @@ services:
     name: Telebot
     env: python
     buildCommand: "requirement -r requirments.txt"
-    startCommand: python bot.py
+    startCommand: python telebot.py
     plan: free
